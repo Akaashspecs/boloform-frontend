@@ -152,10 +152,13 @@ export default function PdfEditor() {
     formData.append("offset", JSON.stringify(offset));
     formData.append("scaleFactor", scaleFactor);
 
-    const res = await fetch("http://localhost:8080/api/edit-pdf", {
-      method: "POST",
-      body: formData,
-    });
+    const res = await fetch(
+      "http://boloform-backend-production.up.railway.app/api/edit-pdf",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     const blob = await res.blob();
     const url = URL.createObjectURL(blob);
