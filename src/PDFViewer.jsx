@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Document, Page } from "react-pdf";
 import SignaturePad from "signature_pad";
+import Loader from "./Loader";
 import { deleteFieldFontSize, deleteFieldKey, updateField } from "./utils";
 export default function PdfEditor() {
   const ORIGINAL_PDF_WIDTH = 592;
@@ -26,6 +27,7 @@ export default function PdfEditor() {
 
   const [signatureTypes, setSignatureTypes] = useState(false);
   const [signDraw, setSignDraw] = useState(false);
+  const [loading, setLoading] = useState(false);
   /** Load PDF */
 
   const [fields, setFields] = useState([
@@ -144,25 +146,30 @@ export default function PdfEditor() {
   }, []);
 
   const upload = async () => {
-    const formData = new FormData();
+    try {
+      setLoading(true);
+      const formData = new FormData();
 
-    formData.append("pdfId", pdfFile.lastModified);
-    formData.append("pdf", pdfFile);
-    formData.append("fields", JSON.stringify(fields));
-    formData.append("offset", JSON.stringify(offset));
-    formData.append("scaleFactor", scaleFactor);
+      formData.append("pdfId", pdfFile.lastModified);
+      formData.append("pdf", pdfFile);
+      formData.append("fields", JSON.stringify(fields));
+      formData.append("offset", JSON.stringify(offset));
+      formData.append("scaleFactor", scaleFactor);
 
-    const res = await fetch(
-      "http://boloform-backend-production.up.railway.app/api/edit-pdf",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+      const res = await fetch(
+        "http://boloform-backend-production.up.railway.app/api/edit-pdf",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-    const blob = await res.blob();
-    const url = URL.createObjectURL(blob);
-    window.open(url);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      window.open(url);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -521,6 +528,8 @@ export default function PdfEditor() {
 
   return (
     <div>
+      {loading && <Loader />}
+
       {signDraw && (
         <div className="flex fixed backdrop-blur-sm h-screen w-screen z-40  justify-center items-center">
           <div className="bg-white ">
