@@ -1,0 +1,7 @@
+@import "tailwindcss";
+
+/* Remove default calendar icon in Chrome & Edge */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  display: none;
+}
