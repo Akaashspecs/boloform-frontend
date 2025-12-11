@@ -157,7 +157,7 @@ export default function PdfEditor() {
       formData.append("scaleFactor", scaleFactor);
 
       const res = await fetch(
-        "http://boloform-backend-production.up.railway.app/api/edit-pdf",
+        "https://boloform-backend-production.up.railway.app/api/edit-pdf",
         {
           method: "POST",
           body: formData,
